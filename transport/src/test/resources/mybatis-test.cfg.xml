@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+将mybatis configuration 文件置于此处的
+1 一方面该文件是全局的
+2 可以通过该文件修改全局配置
+-->
+<!DOCTYPE  configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="cacheEnabled" value="false"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="multipleResultSetsEnabled" value="false"/>
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="useGeneratedKeys" value="false"/>
+        <setting name="autoMappingBehavior" value="PARTIAL"/>
+        <setting name="defaultExecutorType" value="SIMPLE"/>
+        <setting name="defaultStatementTimeout" value="2000"/>
+    </settings>
+
+
+    <typeHandlers>
+        <!--status-->
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.EnumStatusTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.FeeStatus"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.EnumStatusTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.AccountType"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.EnumStatusTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.AccountStatus"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.EnumStatusTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.ChargingPolicyStatus"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.EnumStatusTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.EndChargingStatus"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.EnumStatusTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.RemoteOperatePileStatus"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.EnumStatusTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.RemoteOperateStatus"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.EnumStatusTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.RemoteOperateType"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.EnumStatusTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.ChargingPolicyStrategy"/>
+        <!--serialNumber-->
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.StringSerialNumberHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.ChargingPolicySerialNumber"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.StringSerialNumberHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.ChargingFeeSerialNumber"/>
+
+        <!--RoundedSecondDate-->
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.RoundedSecondDateOnlyTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.RoundedSecondDate" jdbcType="DATE"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.RoundedSecondDateTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.RoundedSecondDate" jdbcType="TIMESTAMP"/>
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.RoundeSecondDateTimeOnlyTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.RoundedSecondDate" jdbcType="TIME"/>
+
+
+        <typeHandler handler="org.pillar.codec.binary.tcp.mybatis.AmountMinorUnitTypeHandler"
+                     javaType="org.pillar.codec.binary.tcp.model.Amount"/>
+
+
+    </typeHandlers>
+</configuration>

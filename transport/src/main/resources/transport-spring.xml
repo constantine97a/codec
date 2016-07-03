@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"
+       default-lazy-init="true">
+
+    <bean id="processorPipeline" class="org.pillar.codec.binary.tcp.processor.ProcessorPipelineFactoryBean">
+        <constructor-arg name="processorList">
+            <list>
+                <!--头解析器-->
+                <ref bean="headProcessor"/>
+                <!--体解析器-->
+                <!--60S定时上报-->
+                <ref bean="chargingReportProcessor"/>
+                <!--充电结束上报-->
+                <ref bean="chargingFinReportProcessor"/>
+                <!--充电桩下发充电策略-->
+                <ref bean="chargingPolicyProcessor"/>
+                <!--手机触发停止充电-->
+                <ref bean="stopChargingProcessor"/>
+                <!--充电桩下发远程操作-->
+                <ref bean="remoteOpProcessor"/>
+                <!--lns-->
+                <!--后台管理系统应答查询充电记录-->
+                <ref bean="chargingRecordProcessor"/>
+                <!-- 充电桩签到 -->
+                <ref bean="pileRegisterProcessor"/>
+                <!-- 充电桩总状态上报 -->
+                <ref bean="pileTotalStatusProcessor"/>
+                <!-- 充电桩运行状态上报 -->
+                <ref bean="pileRunStatusProcessor"/>
+                <!-- 故障信息 -->
+                <ref bean="pileFaultProcessor"/>
+                <!-- 用户验证 -->
+                <ref bean="checkUserProcessor"/> 
+               
+                <ref bean="chargingReserveProcessor"/>  
+                
+            </list>
+        </constructor-arg>
+    </bean>
+</beans>

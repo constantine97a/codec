@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+    <!-- appender 部分是可用的日志输出方式定义，可以定义多个 -->
+    <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%c %-d{yyyy-MM-dd HH:mm:ss} -- %p -- %l -- %m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="DEBUG" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="../logs/pile-debug.log"/>
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <!-- param name="MaxFileSize" value="10240KB" />
+        <param name="MaxBackupIndex" value="10" / -->
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%c %-d{yyyy-MM-dd HH:mm:ss} -- %p -- %l -- %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="TRACE"/>
+            <param name="LevelMax" value="FATAL"/>
+        </filter>
+    </appender>
+
+    <appender name="INFO" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="../logs/pile-info.log"/>
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <!-- param name="MaxFileSize" value="10240KB" />
+        <param name="MaxBackupIndex" value="10" / -->
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%c %-d{yyyy-MM-dd HH:mm:ss} -- %p -- %l -- %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="INFO"/>
+            <param name="LevelMax" value="FATAL"/>
+        </filter>
+    </appender>
+
+    <appender name="WARN" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="../logs/pile-warning.log"/>
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <!-- param name="MaxFileSize" value="10240KB" />
+        <param name="MaxBackupIndex" value="10" / -->
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%c %-d{yyyy-MM-dd HH:mm:ss} -- %p -- %l -- %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="WARN"/>
+            <param name="LevelMax" value="FATAL"/>
+        </filter>
+    </appender>
+
+    <appender name="ERROR" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="../logs/pile-error.log"/>
+        <param name="Append" value="true"/>
+        <param name="Encoding" value="UTF-8"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <!-- param name="MaxFileSize" value="10240KB" />
+        <param name="MaxBackupIndex" value="10" / -->
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%c %-d{yyyy-MM-dd HH:mm:ss} -- %p -- %l -- %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="ERROR"/>
+            <param name="LevelMax" value="FATAL"/>
+        </filter>
+    </appender>
+
+    <!--category的配置， 在配置的初始阶段，让配置尽可能的详细 使用ROOT的配置-->
+
+    <!--&lt;!&ndash; category 部分定义了特定包或者类的输出级别和方式，可以有多个 &ndash;&gt;-->
+    <!--<category name="org.apache">-->
+    <!--<priority value="ERROR"/>-->
+    <!--<appender-ref ref="ERROR"/>-->
+    <!--</category>-->
+
+    <!--<category name="org.apache.cxf">-->
+    <!--<priority value="ERROR"/>-->
+    <!--<appender-ref ref="ERROR"/>-->
+    <!--</category>-->
+
+    <!--<category name="org.apache.ibatis">-->
+    <!--<priority value="ERROR"/>-->
+    <!--<appender-ref ref="ERROR"/>-->
+    <!--</category>-->
+
+    <!--<category name="org.mapper.spring">-->
+    <!--<priority value="ERROR"/>-->
+    <!--<appender-ref ref="ERROR"/>-->
+    <!--</category>-->
+
+    <!--<category name="org.springframework">-->
+    <!--<priority value="ERROR"/>-->
+    <!--<appender-ref ref="ERROR"/>-->
+    <!--</category>-->
+
+    <!--<category name="java.sql">-->
+    <!--<priority value="ERROR"/>-->
+    <!--<appender-ref ref="ERROR"/>-->
+    <!--</category>-->
+
+    <!--<category name="net.rubyeye">-->
+    <!--<priority value="ERROR"/>-->
+    <!--<appender-ref ref="ERROR"/>-->
+    <!--</category>-->
+
+
+
+
+    <!-- root部分定义了log4j的默认输出级别和方式 -->
+    <!--at begining of the config log4j.xml ,make root can controller the all log-->
+    <root>
+        <priority value="DEBUG"/>
+        <appender-ref ref="DEBUG"/>
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="WARN"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</log4j:configuration> 

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd"
+       default-lazy-init="true">
+
+    <description>pile configuration</description>
+
+    <context:annotation-config/>
+
+    <context:spring-configured/>
+
+    <context:component-scan base-package="com.pillar" >
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <!--
+      Including this aspectj-autoproxy element will cause spring to automatically
+      create proxies around any beans defined in this file that match the pointcuts
+      of any aspects defined in this file.
+    -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+
+    <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath*:config-default.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="placeholderConfig"
+          class="com.pillar.tools.spring.EncryptedPropertyPlaceHolderConfigurator">
+        <property name="locations">
+            <list>
+                <value>classpath*:config-test.properties</value>
+                <value>classpath*:db-test.properties</value>
+                <value>classpath*:redis-test.properties</value>
+            </list>
+        </property>
+        <property name="localOverride" value="true"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="encryptedKeys" value="db.datasource.password,redis.password"/>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="txInterceptor"
+          class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="transactionAttributes">
+            <props>
+                <!-- PROPAGATION_SUPPORTS: 已经存在事务则加入事务，没有事务则以非事务的方式执行 -->
+                <!-- PROPAGATION_MANDATORY: 使用当前事务，没有事务则抛出异常 -->
+                <!-- PROPAGATION_REQUIRED: 新建事务，已经存在事务则挂起 -->
+                <!-- ROPAGATION_NOT_SUPPORTED: 以非事务的方式执行，已经存在事务则挂起 -->
+                <!-- PROPAGATION_NEVER: 以非事务的方式执行，已经存在事务则抛出异常 -->
+                <!-- +/-Exception: + 表示异常出现时事物提交 ，- 表示异常出现时事务回滚 -->
+                <prop key="get*">PROPAGATION_SUPPORTS</prop>
+                <prop key="query*">PROPAGATION_SUPPORTS</prop>
+                <prop key="select*">PROPAGATION_SUPPORTS</prop>
+                <prop key="find*">PROPAGATION_SUPPORTS</prop>
+                <prop key="count*">PROPAGATION_SUPPORTS</prop>
+                <prop key="*">PROPAGATION_REQUIRED,-Exception</prop>
+            </props>
+        </property>
+
+    </bean>
+
+    <bean id="autoProxyCreator"
+          class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+
+    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="beanNames">
+            <list>
+                <value>*Service</value>
+                <value>*ServiceImpl</value>
+            </list>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>txInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- MyBatis配置 -->
+    <!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.pillar.dao,org.pillar.codec.binary.tcp.dao"/>
+        <!--MyBatisRepository标识的 ,需要实现-->
+        <property name="annotationClass" value="com.pillar.dao.MyBatisRepository"/>
+    </bean>
+
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
+        <property name="typeAliasesPackage" value="com.pillar.model,org.pillar.codec.binary.tcp.model"/>
+        <!-- 显式指定Mapper文件位置 -->
+        <property name="configLocation" value="classpath:mybatis-test.cfg.xml"/>
+        <property name="mapperLocations" value="classpath:/mapper/**/*Mapper.xml"/>
+    </bean>
+
+    <!--blp datasource-->
+
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${db.datasource.driver}"/>
+        <property name="url" value="${db.datasource.url}"/>
+        <property name="username" value="${db.datasource.username}"/>
+        <property name="password" value="${db.datasource.password}"/>
+        <property name="maxActive" value="${db.connection.maxActive}"/>
+        <property name="maxIdle" value="${db.connection.maxIdle}"/>
+        <property name="maxWait" value="${db.connection.maxWait}"/>
+        <property name="validationQuery" value="select 1 from dual"/>
+    </bean>
+
+    <bean id="futureManager" class="com.pillar.dispatch.FutureManagerFactoryBean">
+        <property name="properties" ref="properties"/>
+    </bean>
+
+    <import resource="classpath*:redis.xml"/>
+
+
+    <import resource="formula.xml"/>
+</beans>
